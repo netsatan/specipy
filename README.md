@@ -26,4 +26,5 @@ Represents functions' parameters\
 
 ### Diagram example
 The complete diagram looks something like this\
-![Full diagram](./tests/examples/diagrams/complex_number_old_python.py.png)
+![Example 1](./tests/examples/diagrams/complex_number_old_python.py.png)
+![Example 2](./tests/examples/diagrams/simple_addition_modern_python.py.png)
