@@ -2,7 +2,7 @@ import base64
 import os
 from unittest import TestCase
 
-from specipy.parsers.diagram_generator import DiagramGenerator
+from specifipy.parsers.diagram_generator import DiagramGenerator
 
 
 class DiagramGeneratorTest(TestCase):
@@ -37,15 +37,22 @@ class DiagramGeneratorTest(TestCase):
 
         # @:when Diagrams generator is run
         diagram_generator = DiagramGenerator()
-        diagram_generator.generate_diagram(fetched_source, "complex_number_old_python.py",
-                                           base_path=f"{current_dir}/results/")
+        diagram_generator.generate_diagram(
+            fetched_source,
+            "complex_number_old_python.py",
+            base_path=f"{current_dir}/results/",
+        )
 
         # @:then Generated diagram matches the example
         example_file_content: bytes
         generated_file_content: bytes
-        with open(f"{current_dir}/examples/diagrams/complex_number_old_python.py.png", "rb") as example_file:
+        with open(
+            f"{current_dir}/examples/diagrams/complex_number_old_python.py.png", "rb"
+        ) as example_file:
             example_file_content = base64.b64encode(bytes(example_file.read()))
-        with open(f"{current_dir}/results/complex_number_old_python.py.png", "rb") as generated_file:
+        with open(
+            f"{current_dir}/results/complex_number_old_python.py.png", "rb"
+        ) as generated_file:
             generated_file_content = base64.b64encode(bytes(generated_file.read()))
 
         self.assertEqual(example_file_content, generated_file_content)
@@ -57,15 +64,23 @@ class DiagramGeneratorTest(TestCase):
 
         # @:when Diagrams generator is run
         diagram_generator = DiagramGenerator()
-        diagram_generator.generate_diagram(fetched_source, "simple_addition_modern_python.py",
-                                           base_path=f"{current_dir}/results/")
+        diagram_generator.generate_diagram(
+            fetched_source,
+            "simple_addition_modern_python.py",
+            base_path=f"{current_dir}/results/",
+        )
 
         # @:then Generated diagram matches the example
         example_file_content: bytes
         generated_file_content: bytes
-        with open(f"{current_dir}/examples/diagrams/simple_addition_modern_python.py.png", "rb") as example_file:
+        with open(
+            f"{current_dir}/examples/diagrams/simple_addition_modern_python.py.png",
+            "rb",
+        ) as example_file:
             example_file_content = base64.b64encode(bytes(example_file.read()))
-        with open(f"{current_dir}/results/simple_addition_modern_python.py.png", "rb") as generated_file:
+        with open(
+            f"{current_dir}/results/simple_addition_modern_python.py.png", "rb"
+        ) as generated_file:
             generated_file_content = base64.b64encode(bytes(generated_file.read()))
 
         self.assertEqual(example_file_content, generated_file_content)
@@ -77,12 +92,16 @@ class DiagramGeneratorTest(TestCase):
 
         # @:when Diagrams generator is run
         diagram_generator = DiagramGenerator()
-        diagram_generator.generate_diagram(fetched_source, "models.py", base_path=f"{current_dir}/results/")
+        diagram_generator.generate_diagram(
+            fetched_source, "models.py", base_path=f"{current_dir}/results/"
+        )
 
         # @:then Generated diagram matches the example
         example_file_content: bytes
         generated_file_content: bytes
-        with open(f"{current_dir}/examples/diagrams/models.py.png", "rb") as example_file:
+        with open(
+            f"{current_dir}/examples/diagrams/models.py.png", "rb"
+        ) as example_file:
             example_file_content = base64.b64encode(bytes(example_file.read()))
         with open(f"{current_dir}/results/models.py.png", "rb") as generated_file:
             generated_file_content = base64.b64encode(bytes(generated_file.read()))

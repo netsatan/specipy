@@ -1,21 +1,25 @@
 import os.path
 from unittest import TestCase
 
-from specipy.parsers.generic_parser import GenericParser
-from specipy.parsers.results import ParsingResult
-from specipy.parsers.structure.code_structure_definitions import StructureEnum
+from specifipy.parsers.generic_parser import GenericParser
+from specifipy.parsers.results import ParsingResult
+from specifipy.parsers.structure.code_structure_definitions import StructureEnum
 
 
 class GenericParserTests(TestCase):
     base_path = os.path.dirname(__file__)
 
     def __load_test_file_old_python(self):
-        with open(f"{self.base_path}/examples/complex_number_old_python.py") as source_code:
+        with open(
+            f"{self.base_path}/examples/complex_number_old_python.py"
+        ) as source_code:
             fetched_source = source_code.read()
         return fetched_source
 
     def __load_test_file_modern_python(self):
-        with open(f"{self.base_path}/examples/simple_addition_modern_python.py") as source_code:
+        with open(
+            f"{self.base_path}/examples/simple_addition_modern_python.py"
+        ) as source_code:
             fetched_source = source_code.read()
         return fetched_source
 
@@ -30,7 +34,10 @@ class GenericParserTests(TestCase):
         # @:then Parser understands the structure
         self.assertEqual(len(parsing_result.classes), 3)
         self.assertEqual(len(parsing_result.functions), 2)
-        self.assertListEqual([x.name for x in parsing_result.classes], ["BaseClassForTest", "SomeTest", "ComplexNumber"])
+        self.assertListEqual(
+            [x.name for x in parsing_result.classes],
+            ["BaseClassForTest", "SomeTest", "ComplexNumber"],
+        )
         self.assertEqual(parsing_result.classes[0].structure_type, StructureEnum.CLASS)
 
     def test_can_get_file_structure_for_modern_python(self):
@@ -44,5 +51,7 @@ class GenericParserTests(TestCase):
         # @:then Parser understands the structure
         self.assertEqual(len(parsing_result.classes), 2)
         self.assertEqual(len(parsing_result.functions), 2)
-        self.assertListEqual([x.name for x in parsing_result.classes], ["MathOperation", "Addition"])
+        self.assertListEqual(
+            [x.name for x in parsing_result.classes], ["MathOperation", "Addition"]
+        )
         self.assertEqual(parsing_result.classes[0].structure_type, StructureEnum.CLASS)

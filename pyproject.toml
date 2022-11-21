@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "specipy"
+name = "specifipy"
 version = "0.1.4"
 description = ""
 authors = ["Bartosz Budzyński <hi@bartosz.blog>"]
