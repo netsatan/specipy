@@ -24,9 +24,7 @@ dotted_line = Edge(style="dotted")
         links_to_generate = []
 
         for clazz in parsing_result.classes:
-            class_element_definition = (
-                f"class_{clazz.name} = Custom('{clazz.name}', class_icon)"
-            )
+            class_element_definition = f"class_{clazz.name} = Custom('{clazz.name}', class_icon, imagescale='false', height='1.5', width='1.5')"
             elements_to_generate.append(class_element_definition)
             if clazz.inherits_from:
                 links_to_generate.append(
@@ -34,21 +32,21 @@ dotted_line = Edge(style="dotted")
                 )
                 if (
                     clazz.inherits_from not in [x.name for x in parsing_result.classes]
-                    and f"class_{clazz.inherits_from} = Custom('{clazz.inherits_from}', class_icon)"
+                    and f"class_{clazz.inherits_from} = Custom('{clazz.inherits_from}', class_icon, imagescale='false', height='1.5', width='1.5')"
                     not in elements_to_generate
                 ):
                     elements_to_generate.append(
-                        f"class_{clazz.inherits_from} = Custom('{clazz.inherits_from}', class_icon)"
+                        f"class_{clazz.inherits_from} = Custom('{clazz.inherits_from}', class_icon, imagescale='false', height='1.5', width='1.5')"
                     )
 
         for func in parsing_result.functions:
-            function_element_definition = f"func_{func.name}_{func.parent_class} = Custom('{func.name}', function_icon)"
+            function_element_definition = f"func_{func.name}_{func.parent_class} = Custom('{func.name}', function_icon, imagescale='false', height='1', width='1')"
             elements_to_generate.append(function_element_definition)
             links_to_generate.append(
                 f"func_{func.name}_{func.parent_class} >> class_{func.parent_class}"
             )
             for param in func.params:
-                param_definition = f"param_{param}_{func.name}_{func.parent_class} = Custom('{param}', param_icon)"
+                param_definition = f"param_{param}_{func.name}_{func.parent_class} = Custom('{param}', param_icon, imagescale='false', height='1', width='1')"
                 elements_to_generate.append(param_definition)
                 links_to_generate.append(
                     f"param_{param}_{func.name}_{func.parent_class} >> func_{func.name}_{func.parent_class}"
