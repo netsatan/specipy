@@ -53,7 +53,7 @@ dotted_line = Edge(style="dotted")
                 )
 
         for field in parsing_result.class_fields:
-            field_element_definition = f"field_{field.name}_{field.parent_class.name} = Custom('{field.name}', field_icon)"
+            field_element_definition = f"field_{field.name}_{field.parent_class.name} = Custom('{field.name}', field_icon, imagescale='false', height='1', width='1')"
             elements_to_generate.append(field_element_definition)
             links_to_generate.append(
                 f"field_{field.name}_{field.parent_class.name} >> class_{field.parent_class.name}"

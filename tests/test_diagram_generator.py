@@ -9,9 +9,9 @@ class DiagramGeneratorTest(TestCase):
     base_path = os.path.dirname(__file__)
     test_results_path = f"{base_path}/results/"
 
-    # def tearDown(self) -> None:
-    #     for f in os.listdir(self.test_results_path):
-    #         os.remove(f"{self.test_results_path}" + f)
+    def tearDown(self) -> None:
+        for f in os.listdir(self.test_results_path):
+            os.remove(f"{self.test_results_path}" + f)
 
     def __load_test_file_old_python(self):
         path = f"{self.base_path}/examples/complex_number_old_python.py"
