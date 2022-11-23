@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "specifipy"
-version = "0.1.4"
-description = ""
+version = "0.1.5"
+description = "Python package for auto-generating code diagrams"
 authors = ["Bartosz Budzyński <hi@bartosz.blog>"]
 
 [tool.poetry.dependencies]
