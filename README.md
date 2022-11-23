@@ -25,7 +25,7 @@ Represents functions' parameters\
 
 
 ### Diagram example
-The complete diagram looks something like this\
+The complete diagram looks something like this
 ```python
 class BaseClassForTest:
     pass
