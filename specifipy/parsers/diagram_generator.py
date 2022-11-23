@@ -63,5 +63,10 @@ dotted_line = Edge(style="dotted")
         joined_links_to_generate = "\t" + "\n\t".join(links_to_generate)
 
         diagram_definition = f'with Diagram("{source_file_name}", show=False, filename="{base_path if base_path else ""}{source_file_name}"):\n'
-        generated_file = f"{self.header}\n{diagram_definition}\n{joined_elements_to_generate}\n{joined_links_to_generate}"
+        if len(links_to_generate) == 0:
+            generated_file = f"{self.header}\n{diagram_definition}\n\tpass"
+        elif len(elements_to_generate) == 0:
+            generated_file = f"{self.header}\n{diagram_definition}\n\tpass"
+        else:
+            generated_file = f"{self.header}\n{diagram_definition}\n{joined_elements_to_generate}\n{joined_links_to_generate}"
         exec(f"{generated_file}")
