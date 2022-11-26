@@ -35,7 +35,7 @@ jobs:
     - name: Commit & Push changes
       uses: actions-js/push@master
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.GH_TOKEN }}
     - name: Set credentials
       run: python -m poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
     - name: Publish package
