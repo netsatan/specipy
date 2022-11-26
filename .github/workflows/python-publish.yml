@@ -32,11 +32,10 @@ jobs:
         pip install poetry
     - name: Prepare release
       run: python -m poetry version patch
-    - name: Commit and push changes
-      uses: devops-infra/action-commit-push@master
+    - name: Commit & Push changes
+      uses: actions-js/push@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        commit_message: New vesion release
     - name: Set credentials
       run: python -m poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
     - name: Publish package
