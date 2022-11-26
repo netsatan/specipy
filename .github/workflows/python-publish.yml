@@ -32,14 +32,11 @@ jobs:
         pip install poetry
     - name: Prepare release
       run: python -m poetry version patch
-    - name: Commit changed release file  
+    - name: Commit and push changes
       uses: devops-infra/action-commit-push@master
       with:
-        github_token: "${{ secrets.GITHUB_TOKEN }}"
-        add_timestamp: true
-        commit_prefix: "[AUTO]"
-        commit_message: "Automatic commit for release"
-        force: false
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        commit_message: New vesion release
     - name: Set credentials
       run: python -m poetry config pypi-token.pypi ${{ secrets.PYPI_TOKEN }}
     - name: Publish package
