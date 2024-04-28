@@ -36,6 +36,7 @@ class ClassStructureDefinition(StructureDefinition):
 class FunctionStructureDefinition(StructureDefinition):
     params: list[str]
     parent_class: ClassStructureDefinition
+    return_type: str = None
 
     def __eq__(self, other):
         return (

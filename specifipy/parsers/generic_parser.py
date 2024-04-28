@@ -14,6 +14,23 @@ class GenericParser:
     def __init__(self):
         pass
 
+    def get_return_type_annotation(self, function_node: ast.FunctionDef) -> str | None:
+        # Check if the function has a return type annotation directly
+        if function_node.returns:
+            return ast.unparse(function_node.returns)
+
+        # If not, try to find the return type annotation in the function body
+        for node in ast.walk(function_node):
+            if isinstance(node, ast.Return):
+                if (
+                    isinstance(node.value, ast.NameConstant)
+                    and node.value.value is None
+                ):
+                    continue
+                if isinstance(node.value, ast.AnnAssign):
+                    return ast.unparse(node.value.annotation)
+        return None
+
     def __classify_node(
         self, node: ast.AST, parsing_result: ParsingResult, parent=None
     ) -> None:
@@ -56,6 +73,7 @@ class GenericParser:
                     node.end_lineno,
                     params_string,
                     (parent.name if parent else None),
+                    str(self.get_return_type_annotation(node)),
                 )
                 if function_definition not in parsing_result.functions:
                     parsing_result.functions.append(function_definition)
