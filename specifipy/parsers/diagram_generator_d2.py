@@ -83,7 +83,6 @@ class DiagramGenerator(GenericParser):
                     )
                 )
         diagram = D2Diagram(shapes=elements_to_generate, connections=link_to_generate)
-        print(f"{source_file_name}, diagram '{diagram}'")
         if str(diagram) is not None and str(diagram) != "":
             with open(
                 f"{base_path if base_path else ''}{source_file_name}.d2",
