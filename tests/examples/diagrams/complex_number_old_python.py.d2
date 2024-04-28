@@ -1,0 +1,14 @@
+direction: up
+BaseClassForTest: {
+  shape: class
+}
+SomeTest: {
+  shape: class
+}
+ComplexNumber: {
+  __init__(self, real, imag): 'None'
+  add(self, num): 'None'
+  shape: class
+}
+SomeTest -> BaseClassForTest
+ComplexNumber -> SomeTest

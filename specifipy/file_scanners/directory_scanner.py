@@ -1,6 +1,6 @@
 import os
 
-from specifipy.parsers.diagram_generator import DiagramGenerator
+from specifipy.parsers.diagram_generator_d2 import DiagramGenerator
 
 
 class DirectoryScanner:

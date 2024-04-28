@@ -2,7 +2,7 @@ import base64
 import os
 from unittest import TestCase
 
-from specifipy.parsers.diagram_generator import DiagramGenerator
+from specifipy.parsers.diagram_generator_d2 import DiagramGenerator
 
 
 class DiagramGeneratorTest(TestCase):
@@ -47,11 +47,11 @@ class DiagramGeneratorTest(TestCase):
         example_file_content: bytes
         generated_file_content: bytes
         with open(
-            f"{current_dir}/examples/diagrams/complex_number_old_python.py.png", "rb"
+            f"{current_dir}/examples/diagrams/complex_number_old_python.py.d2", "rb"
         ) as example_file:
             example_file_content = base64.b64encode(bytes(example_file.read()))
         with open(
-            f"{current_dir}/results/complex_number_old_python.py.png", "rb"
+            f"{current_dir}/results/complex_number_old_python.py.d2", "rb"
         ) as generated_file:
             generated_file_content = base64.b64encode(bytes(generated_file.read()))
 
@@ -74,12 +74,12 @@ class DiagramGeneratorTest(TestCase):
         example_file_content: bytes
         generated_file_content: bytes
         with open(
-            f"{current_dir}/examples/diagrams/simple_addition_modern_python.py.png",
+            f"{current_dir}/examples/diagrams/simple_addition_modern_python.py.d2",
             "rb",
         ) as example_file:
             example_file_content = base64.b64encode(bytes(example_file.read()))
         with open(
-            f"{current_dir}/results/simple_addition_modern_python.py.png", "rb"
+            f"{current_dir}/results/simple_addition_modern_python.py.d2", "rb"
         ) as generated_file:
             generated_file_content = base64.b64encode(bytes(generated_file.read()))
 
@@ -100,10 +100,10 @@ class DiagramGeneratorTest(TestCase):
         example_file_content: bytes
         generated_file_content: bytes
         with open(
-            f"{current_dir}/examples/diagrams/models.py.png", "rb"
+            f"{current_dir}/examples/diagrams/models.py.d2", "rb"
         ) as example_file:
             example_file_content = base64.b64encode(bytes(example_file.read()))
-        with open(f"{current_dir}/results/models.py.png", "rb") as generated_file:
+        with open(f"{current_dir}/results/models.py.d2", "rb") as generated_file:
             generated_file_content = base64.b64encode(bytes(generated_file.read()))
 
         self.assertEqual(example_file_content, generated_file_content)

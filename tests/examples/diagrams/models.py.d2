@@ -1,0 +1,82 @@
+direction: up
+FoodOffering: {
+  name
+  price
+  __str__(self): 'None'
+  shape: class
+}
+Person: {
+  first_name
+  last_name
+  food_offering
+  user
+  __str__(self): 'None'
+  shape: class
+}
+Card: {
+  tag_id
+  person
+  __str__(self): 'None'
+  shape: class
+}
+Reading: {
+  person
+  tag
+  created_datetime
+  __str__(self): 'None'
+  shape: class
+}
+Absence: {
+  person
+  day
+  is_planned
+  __str__(self): 'None'
+  shape: class
+}
+Holiday: {
+  day
+  __str__(self): 'None'
+  shape: class
+}
+PrepaidHours: {
+  person
+  prepaid_amount
+  shape: class
+}
+DiscountDefinition: {
+  description
+  is_percentage
+  value
+  shape: class
+}
+Invoice: {
+  person
+  discount
+  total
+  start_range
+  end_range
+  shape: class
+}
+InvoiceItem: {
+  invoice
+  quantity
+  rate
+  shape: class
+}
+UnknownReading: {
+  tag
+  created_datetime
+  __str__(self): 'None'
+  shape: class
+}
+FoodOffering -> models_Model
+Person -> models_Model
+Card -> models_Model
+Reading -> models_Model
+Absence -> models_Model
+Holiday -> models_Model
+PrepaidHours -> models_Model
+DiscountDefinition -> models_Model
+Invoice -> models_Model
+InvoiceItem -> models_Model
+UnknownReading -> models_Model
