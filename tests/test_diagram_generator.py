@@ -9,9 +9,9 @@ class DiagramGeneratorTest(TestCase):
     base_path = os.path.dirname(__file__)
     test_results_path = f"{base_path}/results/"
 
-    def tearDown(self) -> None:
-        for f in os.listdir(self.test_results_path):
-            os.remove(f"{self.test_results_path}" + f)
+    # def tearDown(self) -> None:
+    #     for f in os.listdir(self.test_results_path):
+    #         os.remove(f"{self.test_results_path}" + f)
 
     def __load_test_file_old_python(self):
         path = f"{self.base_path}/examples/complex_number_old_python.py"
@@ -44,16 +44,16 @@ class DiagramGeneratorTest(TestCase):
         )
 
         # @:then Generated diagram matches the example
-        example_file_content: bytes
-        generated_file_content: bytes
+        example_file_content: str
+        generated_file_content: str
         with open(
-            f"{current_dir}/examples/diagrams/complex_number_old_python.py.d2", "rb"
+            f"{current_dir}/examples/diagrams/complex_number_old_python.py.d2", "r"
         ) as example_file:
-            example_file_content = base64.b64encode(bytes(example_file.read()))
+            example_file_content = "".join(example_file.readlines()).strip()
         with open(
-            f"{current_dir}/results/complex_number_old_python.py.d2", "rb"
+            f"{current_dir}/results/complex_number_old_python.py.d2", "r"
         ) as generated_file:
-            generated_file_content = base64.b64encode(bytes(generated_file.read()))
+            generated_file_content = "".join(generated_file.readlines()).strip()
 
         self.assertEqual(example_file_content, generated_file_content)
 
@@ -71,17 +71,17 @@ class DiagramGeneratorTest(TestCase):
         )
 
         # @:then Generated diagram matches the example
-        example_file_content: bytes
-        generated_file_content: bytes
+        example_file_content: str
+        generated_file_content: str
         with open(
             f"{current_dir}/examples/diagrams/simple_addition_modern_python.py.d2",
-            "rb",
+            "r",
         ) as example_file:
-            example_file_content = base64.b64encode(bytes(example_file.read()))
+            example_file_content = "".join(example_file.readlines()).strip()
         with open(
-            f"{current_dir}/results/simple_addition_modern_python.py.d2", "rb"
+            f"{current_dir}/results/simple_addition_modern_python.py.d2", "r"
         ) as generated_file:
-            generated_file_content = base64.b64encode(bytes(generated_file.read()))
+            generated_file_content = "".join(generated_file.readlines()).strip()
 
         self.assertEqual(example_file_content, generated_file_content)
 
@@ -97,13 +97,11 @@ class DiagramGeneratorTest(TestCase):
         )
 
         # @:then Generated diagram matches the example
-        example_file_content: bytes
-        generated_file_content: bytes
-        with open(
-            f"{current_dir}/examples/diagrams/models.py.d2", "rb"
-        ) as example_file:
-            example_file_content = base64.b64encode(bytes(example_file.read()))
-        with open(f"{current_dir}/results/models.py.d2", "rb") as generated_file:
-            generated_file_content = base64.b64encode(bytes(generated_file.read()))
+        example_file_content: str
+        generated_file_content: str
+        with open(f"{current_dir}/examples/diagrams/models.py.d2", "r") as example_file:
+            example_file_content = "".join(example_file.readlines()).strip()
+        with open(f"{current_dir}/results/models.py.d2", "r") as generated_file:
+            generated_file_content = "".join(generated_file.readlines()).strip()
 
         self.assertEqual(example_file_content, generated_file_content)
