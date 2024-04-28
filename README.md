@@ -2,27 +2,37 @@
 Python package for auto-generating code diagrams
 
 ## What is that? 
-Specifipy helps you visually understand your Python classes. It generates code diagrams 
+Specifipy helps you visually understand your Python code. It generates UML code diagrams 
 for your object-oriented Python programs showing you the inheritance, fields, methods and
 functions.
 
-## Core elements
-### Classes
-Represents Python class\
-![Class](./specifipy/resources/icons/class_icon.png)
+## How to use that? 
+### Scanning directory and generating diagrams for all files
+Import the `specifipy` class you need. If you want to recursively scan the directory (probably 
+the most common usecase) just follow these steps:
+```python
+from specifipy.file_scanners.directory_scanner import DirectoryScanner
+d = DirectoryScanner("/path/to/your/src/directory")
+d.make_diagrams()
+```
 
-### Fields
-Represents class fields\
-![Fields](./specifipy/resources/icons/field_icon.png)
+This will create all the diagrams for all the files that contain Python classes right in your working dir.
 
-### Functions
-Represents functions\
-![Function](./specifipy/resources/icons/function_icon.png)
+### In-place diagram generation
+If you want to generate diagram in-place, for a single file, you can just load its context into a string and
+then provide it directly to the `DiagramGenerator`, like this:
+```python
+from specifipy.parsers.diagram_generator_d2 import DiagramGenerator
 
-### Params
-Represents functions' parameters\
-![Param](./specifipy/resources/icons/param_icon.png)
+diagram_generator = DiagramGenerator()
+diagram_generator.generate_diagram(
+    file_contents_str,
+    "complex_number_old_python.py",
+    base_path=f"./diagrams/",
+)
+```
 
+Of course, you can provide as `file_contents_str` any valid Python code however you'd like, not only from a file.
 
 ### Diagram example
 The complete diagram looks something like this
@@ -97,3 +107,7 @@ class Addition(MathOperation):
 
 ```
 ![Example 2](./tests/examples/diagrams/simple_addition_modern_python.py.png)
+
+---
+If you like this project, and it helped you in any way, I'll be thrilled to know that! I like to write software that's 
+actually useful.
