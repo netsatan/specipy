@@ -3,9 +3,9 @@ from enum import Enum
 
 
 class StructureEnum(Enum):
-    CLASS = (1,)
-    FUNCTION = (2,)
-    VARIABLE = (3,)
+    CLASS = 1
+    FUNCTION = 2
+    VARIABLE = 3
     CLASS_FIELD = 4
 
 
