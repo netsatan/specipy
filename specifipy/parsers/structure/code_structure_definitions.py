@@ -26,6 +26,18 @@ class StructureDefinition:
     start_line: int
     end_line: int
 
+    # This is not a comprehensive list
+    d2_reserved_keywords = ["label", "class", "classes", "style", "shape"]
+
+    # This hack is to avoid failure on diagram generation when a D2 keyword is encountered
+    def sanitize_d2_names(self):
+        keyword_escape_char: str = "⠀"
+        if self.name.lower() in self.d2_reserved_keywords:
+            self.name = self.name + keyword_escape_char
+
+    def __post_init__(self):
+        self.sanitize_d2_names()
+
 
 @dataclasses.dataclass
 class ClassStructureDefinition(StructureDefinition):
