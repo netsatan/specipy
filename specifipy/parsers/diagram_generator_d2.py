@@ -7,6 +7,7 @@ from specifipy.parsers.structure.code_structure_definitions import (
     ClassStructureDefinition,
     FieldStructureDefinition,
     FunctionStructureDefinition,
+    StructureEnum,
     TypeAnnotatedFieldStructureDefinition,
 )
 
@@ -53,11 +54,15 @@ class DiagramGenerator(GenericParser):
         return result_shape
 
     def generate_diagram(
-        self, source_file_content: str, source_file_name: str, base_path: str = None
-    ):
+        self,
+        source_file_content: str,
+        source_file_name: str,
+        base_path: str = None,
+        save_file: bool = True,
+    ) -> D2Diagram | None:
         parsing_result: ParsingResult = self.parse(source_file_content)
-        elements_to_generate = []
-        link_to_generate = []
+        elements_to_generate: list[D2Shape] = []
+        link_to_generate: list[D2Connection] = []
 
         class_element: ClassStructureDefinition
         for class_element in parsing_result.classes:
@@ -82,12 +87,37 @@ class DiagramGenerator(GenericParser):
                         shape_1=class_element.name, shape_2=class_element.inherits_from
                     )
                 )
+        self.add_missing_elements_from_links_as_classes(
+            elements_to_generate, link_to_generate
+        )
         diagram = D2Diagram(shapes=elements_to_generate, connections=link_to_generate)
         if str(diagram) is not None and str(diagram) != "":
-            with open(
-                f"{base_path if base_path else ''}{source_file_name}.d2",
-                "w",
-                encoding="utf-8",
-            ) as output_file:
-                output_file.write("direction: up\n")
-                output_file.write(str(diagram))
+            if save_file:
+                self.save_diagram_to_file(base_path, diagram, source_file_name)
+            return diagram
+
+    def add_missing_elements_from_links_as_classes(
+        self, elements_to_generate, link_to_generate
+    ):
+        missing_elements = set([link.shape_2 for link in link_to_generate]) - set(
+            [element.name for element in elements_to_generate]
+        )
+        elements_to_generate.extend(
+            [
+                self.__generate_class_definition_d2(
+                    ClassStructureDefinition(
+                        StructureEnum.CLASS, missing_element, 0, 0, None
+                    )
+                )
+                for missing_element in missing_elements
+            ]
+        )
+
+    def save_diagram_to_file(self, base_path, diagram, source_file_name):
+        with open(
+            f"{base_path if base_path else ''}{source_file_name}.d2",
+            "w",
+            encoding="utf-8",
+        ) as output_file:
+            output_file.write("direction: up\n")
+            output_file.write(str(diagram))
