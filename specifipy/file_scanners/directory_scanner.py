@@ -57,7 +57,12 @@ class DirectoryScanner:
     def show_vars(self):
         print(self.full_dir_paths, self.full_file_paths)
 
-    def make_diagrams(self, collect_files=True, base_path: str | None = None):
+    def make_diagrams(
+        self,
+        collect_files=True,
+        file_name_containers=False,
+        base_path: str | None = None,
+    ):
         diagram_generator = DiagramGenerator()
         diagrams: list[D2Diagram] = []
         for f in self.full_file_paths:
@@ -68,6 +73,7 @@ class DirectoryScanner:
                     name,
                     base_path=base_path,
                     save_file=not collect_files,
+                    file_name_container=file_name_containers,
                 )
                 if collect_files and diagram:
                     diagrams.append(diagram)

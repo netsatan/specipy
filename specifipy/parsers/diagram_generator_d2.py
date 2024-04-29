@@ -63,6 +63,7 @@ class DiagramGenerator(GenericParser):
         source_file_name: str,
         base_path: str = None,
         save_file: bool = True,
+        file_name_container=False,
     ) -> D2Diagram | None:
         parsing_result: ParsingResult = self.parse(source_file_content)
         elements_to_generate: list[D2Shape] = []
@@ -80,12 +81,18 @@ class DiagramGenerator(GenericParser):
                 for x in parsing_result.class_fields
                 if x.parent_class == class_element
             ]
+            if file_name_container:
+                class_element.name = (
+                    f'{source_file_name.replace(".", "-")}.{class_element.name}'
+                )
             elements_to_generate.append(
                 self.__generate_class_definition_d2(
                     class_element, fields=class_fields, methods=class_functions
                 )
             )
             if class_element.inherits_from:
+                if file_name_container:
+                    class_element.inherits_from = f'{source_file_name.replace(".", "-")}.{class_element.inherits_from}'
                 link_to_generate.append(
                     D2Connection(
                         shape_1=class_element.name, shape_2=class_element.inherits_from
