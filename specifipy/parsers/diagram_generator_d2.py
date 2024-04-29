@@ -47,7 +47,9 @@ class DiagramGenerator(GenericParser):
         if method_element.return_type:
             result_shape = D2Shape(
                 name=f"{method_element.name}({', '.join([x for x in method_element.params])})",
-                label=f"'{method_element.return_type}'",
+                label=f"'{method_element.return_type}'"
+                if not "'" in method_element.return_type
+                else f'"{method_element.return_type}"',
             )
         else:
             result_shape = D2Shape(
