@@ -32,7 +32,9 @@ class DiagramGenerator(GenericParser):
         if isinstance(class_function_element, TypeAnnotatedFieldStructureDefinition):
             result_shape = D2Shape(
                 name=class_function_element.name,
-                label=f"'{class_function_element.type_annotation}'",
+                label=f"'{class_function_element.type_annotation}'"
+                if not "'" in class_function_element.type_annotation
+                else f'"{class_function_element.type_annotation}"',
             )
         else:
             result_shape = D2Shape(name=class_function_element.name)

@@ -43,7 +43,7 @@ class GenericParser:
                     if isinstance(node.bases[0], ast.Name):
                         inherits_from = node.bases[0].id
                     if isinstance(node.bases[0], ast.Attribute):
-                        inherits_from = f"{node.bases[0].value.id}_{node.bases[0].attr}"
+                        inherits_from = f"{node.bases[0].value.id if hasattr(node.bases[0].value, 'id') else node.bases[0].value.value.id}_{node.bases[0].attr}"
 
                 class_definition = ClassStructureDefinition(
                     StructureEnum.CLASS,
@@ -84,8 +84,17 @@ class GenericParser:
                     name: str = node.target.id
                     type_annotation: str = (
                         node.annotation.id
-                        if not type(node.annotation) == ast.Subscript
-                        else node.annotation.value.id
+                        if not isinstance(
+                            node.annotation,
+                            (ast.Attribute, ast.Subscript, ast.BinOp, ast.Call),
+                        )
+                        else node.annotation.attr
+                        if isinstance(node.annotation, ast.Attribute)
+                        else ast.unparse(node.annotation.slice)
+                        if isinstance(node.annotation, ast.Subscript)
+                        else ast.unparse(node.annotation)
+                        if isinstance(node.annotation, ast.BinOp)
+                        else ast.unparse(node.annotation)
                     )
                     field = TypeAnnotatedFieldStructureDefinition(
                         StructureEnum.CLASS_FIELD,
@@ -100,7 +109,13 @@ class GenericParser:
             case ast.Assign:
                 if isinstance(parent, ClassStructureDefinition) and parent:
                     node: ast.Assign
-                    name: str = node.targets[0].id
+                    name: str = (
+                        node.targets[0].id
+                        if isinstance(node.targets[0], ast.Name)
+                        else node.targets[0].attr
+                        if isinstance(node.targets[0], ast.Attribute)
+                        else str(node.targets[0])
+                    )
                     field = NotTypeAnnotatedFieldStructureDefinition(
                         StructureEnum.CLASS_FIELD,
                         name,
