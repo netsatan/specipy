@@ -2,6 +2,7 @@ import os
 
 from py_d2 import D2Diagram
 
+from specifipy.diagram_engines.hashable_connection import D2HashableConnection
 from specifipy.parsers.diagram_generator_d2 import DiagramGenerator
 
 
@@ -72,10 +73,14 @@ class DirectoryScanner:
                     diagrams.append(diagram)
         if diagrams:
             classes = sum([diagram.shapes for diagram in diagrams], [])
-            connections = sum([diagram.connections for diagram in diagrams], [])
+            connections = [
+                D2HashableConnection(x.shape_1, x.shape_2, x.label, x.direction)
+                for x in sum([diagram.connections for diagram in diagrams], [])
+            ]
+            print(connections)
             diagram_generator.save_diagram_to_file(
                 base_path if base_path else "./",
-                D2Diagram(classes, connections),
+                D2Diagram(classes, list(set(connections))),
                 "code_diagrams",
             )
 
