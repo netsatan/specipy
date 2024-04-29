@@ -16,7 +16,8 @@ d = DirectoryScanner("/path/to/your/src/directory")
 d.make_diagrams()
 ```
 
-This will create all the diagrams for all the files that contain Python classes right in your working dir.
+This will create all the diagrams for all the files that contain Python classes right in your working dir. You can, of
+course, provide the directory in `make_diagrams` to have the output file wherever you wish.
 
 ### In-place diagram generation
 If you want to generate diagram in-place, for a single file, you can just load its context into a string and
@@ -107,6 +108,10 @@ class Addition(MathOperation):
 
 ```
 ![Example 2](./tests/examples/diagrams/simple_addition_modern_python.py.png)
+
+
+And here's this exact codebase (including examples above):
+![Codebase example](./tests/examples/diagrams/d2.svg)
 
 ---
 If you like this project, and it helped you in any way, I'll be thrilled to know that! I like to write software that's 
