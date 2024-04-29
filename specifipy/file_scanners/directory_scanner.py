@@ -1,5 +1,7 @@
 import os
 
+from py_d2 import D2Diagram
+
 from specifipy.parsers.diagram_generator_d2 import DiagramGenerator
 
 
@@ -54,12 +56,28 @@ class DirectoryScanner:
     def show_vars(self):
         print(self.full_dir_paths, self.full_file_paths)
 
-    def make_diagrams(self):
+    def make_diagrams(self, collect_files=True, base_path: str | None = None):
         diagram_generator = DiagramGenerator()
+        diagrams: list[D2Diagram] = []
         for f in self.full_file_paths:
             name = f.split("/")[-1]
             with open(f) as python_file:
-                diagram_generator.generate_diagram(python_file.read(), name)
+                diagram = diagram_generator.generate_diagram(
+                    python_file.read(),
+                    name,
+                    base_path=base_path,
+                    save_file=not collect_files,
+                )
+                if collect_files and diagram:
+                    diagrams.append(diagram)
+        if diagrams:
+            classes = sum([diagram.shapes for diagram in diagrams], [])
+            connections = sum([diagram.connections for diagram in diagrams], [])
+            diagram_generator.save_diagram_to_file(
+                base_path if base_path else "./",
+                D2Diagram(classes, connections),
+                "code_diagrams",
+            )
 
     def do_recursive_directory_scanning(self):
         new_found_directory_paths: list[str] = []
