@@ -60,7 +60,7 @@ class DirectoryScanner:
     def make_diagrams(
         self,
         collect_files=True,
-        file_name_containers=False,
+        file_name_containers: bool = False,
         base_path: str | None = None,
     ):
         diagram_generator = DiagramGenerator()

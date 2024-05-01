@@ -1,7 +1,7 @@
 from py_d2 import D2Connection, D2Diagram, D2Shape
 from py_d2.shape import Shape
 
-from specifipy.parsers.generic_parser import GenericParser
+from specifipy.parsers.generic_parser import FileType, ParserFactory, PythonParser
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
     ClassStructureDefinition,
@@ -12,7 +12,10 @@ from specifipy.parsers.structure.code_structure_definitions import (
 )
 
 
-class DiagramGenerator(GenericParser):
+class DiagramGenerator:
+    def __init__(self, file_type: FileType = FileType.PYTHON):
+        self.parser = ParserFactory.get_parser(file_type)
+
     def __generate_class_definition_d2(
         self,
         class_element: ClassStructureDefinition,
@@ -65,7 +68,7 @@ class DiagramGenerator(GenericParser):
         save_file: bool = True,
         file_name_container=False,
     ) -> D2Diagram | None:
-        parsing_result: ParsingResult = self.parse(source_file_content)
+        parsing_result: ParsingResult = self.parser.parse(source_file_content)
         elements_to_generate: list[D2Shape] = []
         link_to_generate: list[D2Connection] = []
 

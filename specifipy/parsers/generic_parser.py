@@ -1,4 +1,6 @@
+import abc
 import ast
+from enum import Enum
 
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
@@ -10,7 +12,33 @@ from specifipy.parsers.structure.code_structure_definitions import (
 )
 
 
-class GenericParser:
+class FileType(Enum):
+    PYTHON = 1
+    JAVA = 2
+
+
+class GenericParser(abc.ABC):
+    @abc.abstractmethod
+    def parse(self, source_code_file_content: str) -> ParsingResult:
+        pass
+
+
+class ParserFactory:
+    @staticmethod
+    def get_parser(file_type: FileType) -> GenericParser:
+        if file_type == FileType.PYTHON:
+            return PythonParser()
+        if file_type == FileType.JAVA:
+            return JavaParser()
+        raise NotImplementedError(f"Unsupported file type: {file_type}")
+
+
+class JavaParser(GenericParser):
+    def parse(self, source_code_file_content: str) -> ParsingResult:
+        return ParsingResult([], [], [])
+
+
+class PythonParser(GenericParser):
     def __init__(self):
         pass
 
