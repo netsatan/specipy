@@ -71,15 +71,14 @@ class DirectoryScanner:
             collect_files=True,
             file_name_containers: bool = False,
             base_path: str | None = None,
-            file_type: FileType = FileType.PYTHON
     ):
-        diagram_generator = DiagramGenerator()
+        diagram_generator = DiagramGenerator(self.file_type)
         diagrams: list[D2Diagram] = []
         for f in self.full_file_paths:
             name = f.split("/")[-1]
-            with open(f) as python_file:
+            with open(f) as code_file:
                 diagram = diagram_generator.generate_diagram(
-                    python_file.read(),
+                    code_file.read(),
                     name,
                     base_path=base_path,
                     save_file=not collect_files,
