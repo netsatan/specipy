@@ -2,6 +2,9 @@ import abc
 import ast
 from enum import Enum
 
+import javalang.parse
+from javalang.tree import CompilationUnit
+
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
     ClassStructureDefinition,
@@ -13,8 +16,8 @@ from specifipy.parsers.structure.code_structure_definitions import (
 
 
 class FileType(Enum):
-    PYTHON = 1
-    JAVA = 2
+    PYTHON = "python"
+    JAVA = "java"
 
 
 class GenericParser(abc.ABC):
@@ -35,7 +38,9 @@ class ParserFactory:
 
 class JavaParser(GenericParser):
     def parse(self, source_code_file_content: str) -> ParsingResult:
-        return ParsingResult([], [], [])
+        tree: CompilationUnit = javalang.parse.parse(source_code_file_content)
+        print(tree)
+        return ParsingResult([],[],[])
 
 
 class PythonParser(GenericParser):
