@@ -22,7 +22,12 @@ This will create all the diagrams for all the files that contain Python classes 
 course, provide the directory in `make_diagrams` to have the output file wherever you wish.
 
 ### Using Java?
-In such case, you'll need to provide additional arguments.
+In such case, you'll need to provide additional arguments, like this:
+```python
+from specifipy.file_scanners.directory_scanner import DirectoryScanner
+from specifipy.parsers.generic_parser import FileType
+d = DirectoryScanner("/home/netsatan/tmp/utils4j/src/main", FileType.JAVA)
+```
 
 ### In-place diagram generation
 If you want to generate diagram in-place, for a single file, you can just load its context into a string and
