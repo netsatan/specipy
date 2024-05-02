@@ -1,7 +1,7 @@
 import os.path
 from unittest import TestCase
 
-from specifipy.parsers.generic_parser import GenericParser
+from specifipy.parsers.generic_parser import PythonParser
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import StructureEnum
 
@@ -28,7 +28,7 @@ class GenericParserTests(TestCase):
         fetched_source: str = self.__load_test_file_old_python()
 
         # @:when It is run through a docstring parser
-        generic_parser = GenericParser()
+        generic_parser = PythonParser()
         parsing_result: ParsingResult = generic_parser.parse(fetched_source)
 
         # @:then Parser understands the structure
@@ -45,7 +45,7 @@ class GenericParserTests(TestCase):
         fetched_source: str = self.__load_test_file_modern_python()
 
         # @:when It is run through a docstring parser
-        generic_parser = GenericParser()
+        generic_parser = PythonParser()
         parsing_result: ParsingResult = generic_parser.parse(fetched_source)
 
         # @:then Parser understands the structure

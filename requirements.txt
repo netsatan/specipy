@@ -2,3 +2,4 @@ snakemd~=0.11.0
 docstring-parser~=0.15
 pytest==8.2.0
 py-d2==1.0.0
+javalang==0.13.0

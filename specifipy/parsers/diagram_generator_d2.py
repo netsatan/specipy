@@ -1,7 +1,8 @@
-from py_d2 import D2Connection, D2Diagram, D2Shape
+from py_d2 import D2Connection, D2Diagram, D2Shape, Direction
 from py_d2.shape import Shape
 
-from specifipy.parsers.generic_parser import GenericParser
+from specifipy.diagram_engines.hashable_connection import D2HashableConnection
+from specifipy.parsers.generic_parser import FileType, ParserFactory, PythonParser
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
     ClassStructureDefinition,
@@ -12,7 +13,10 @@ from specifipy.parsers.structure.code_structure_definitions import (
 )
 
 
-class DiagramGenerator(GenericParser):
+class DiagramGenerator:
+    def __init__(self, file_type: FileType = FileType.PYTHON):
+        self.parser = ParserFactory.get_parser(file_type)
+
     def __generate_class_definition_d2(
         self,
         class_element: ClassStructureDefinition,
@@ -65,16 +69,17 @@ class DiagramGenerator(GenericParser):
         save_file: bool = True,
         file_name_container=False,
     ) -> D2Diagram | None:
-        parsing_result: ParsingResult = self.parse(source_file_content)
+        parsing_result: ParsingResult = self.parser.parse(source_file_content)
         elements_to_generate: list[D2Shape] = []
         link_to_generate: list[D2Connection] = []
 
         class_element: ClassStructureDefinition
+
         for class_element in parsing_result.classes:
             class_functions = [
                 self.__generate_class_function_definition_d2(x)
                 for x in parsing_result.functions
-                if x.parent_class == class_element.name
+                if x.parent_class == class_element
             ]
             class_fields = [
                 self.__generate_field_definition_d2(x)
@@ -98,6 +103,15 @@ class DiagramGenerator(GenericParser):
                         shape_1=class_element.name, shape_2=class_element.inherits_from
                     )
                 )
+            if class_element.implements:
+                for interface in class_element.implements:
+                    link_to_generate.append(
+                        D2HashableConnection(
+                            class_element.name,
+                            interface,
+                            "{ style: { stroke-dash: 3 } } ",
+                        )
+                    )
         self.add_missing_elements_from_links_as_classes(
             elements_to_generate, link_to_generate
         )

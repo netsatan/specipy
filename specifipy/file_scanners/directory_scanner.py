@@ -1,22 +1,31 @@
 import os
+from enum import Enum
 
 from py_d2 import D2Diagram
 
 from specifipy.diagram_engines.hashable_connection import D2HashableConnection
 from specifipy.parsers.diagram_generator_d2 import DiagramGenerator
+from specifipy.parsers.generic_parser import FileType
 
 
 class DirectoryScanner:
     scan_path: str = None
     full_dir_paths: list[str] = []
     full_file_paths: list[str] = []
+    file_type: FileType = FileType.PYTHON
+
+    file_extension_mapping: dict[str, str] = {"python": "py", "java": "java"}
 
     def __matches_file_classification(self, full_file_path) -> bool:
         file_name = full_file_path.split("/")[-1]
+        expected_file_type_expression_length = (
+            len(self.file_extension_mapping[self.file_type.value]) + 1
+        )
         return (
             os.path.isfile(full_file_path)
             and file_name[0] != "."
-            and file_name[-3:] == ".py"
+            and file_name[-expected_file_type_expression_length:]
+            == f".{self.file_extension_mapping[self.file_type.value]}"
         )
 
     def __matches_directory_classification(self, full_dir_path) -> bool:
@@ -28,7 +37,8 @@ class DirectoryScanner:
             and not "virtualenv" in dir_name
         )
 
-    def __init__(self, base_path: str):
+    def __init__(self, base_path: str, file_type: FileType = FileType.PYTHON):
+        self.file_type = file_type
         self.scan_path = os.path.abspath(base_path)
         for obj in os.listdir(self.scan_path):
             os.path.join(self.scan_path, obj)
@@ -54,22 +64,19 @@ class DirectoryScanner:
 
         self.do_recursive_directory_scanning()
 
-    def show_vars(self):
-        print(self.full_dir_paths, self.full_file_paths)
-
     def make_diagrams(
         self,
         collect_files=True,
-        file_name_containers=False,
+        file_name_containers: bool = False,
         base_path: str | None = None,
     ):
-        diagram_generator = DiagramGenerator()
+        diagram_generator = DiagramGenerator(self.file_type)
         diagrams: list[D2Diagram] = []
         for f in self.full_file_paths:
             name = f.split("/")[-1]
-            with open(f) as python_file:
+            with open(f) as code_file:
                 diagram = diagram_generator.generate_diagram(
-                    python_file.read(),
+                    code_file.read(),
                     name,
                     base_path=base_path,
                     save_file=not collect_files,
