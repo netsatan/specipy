@@ -1,9 +1,11 @@
 # Specifipy
+<img height="150" src="./OIG3.jpeg" width="150"/>
+
 Python package for auto-generating code diagrams
 
 ## What is that? 
 Specifipy helps you visually understand your Python code. It generates UML code diagrams 
-for your object-oriented Python programs showing you the inheritance, fields, methods and
+for your object-oriented programs showing you the inheritance, interfaces, fields, methods and
 functions.
 
 ## How to use that? 
@@ -18,6 +20,9 @@ d.make_diagrams()
 
 This will create all the diagrams for all the files that contain Python classes right in your working dir. You can, of
 course, provide the directory in `make_diagrams` to have the output file wherever you wish.
+
+### Using Java?
+In such case, you'll need to provide additional arguments.
 
 ### In-place diagram generation
 If you want to generate diagram in-place, for a single file, you can just load its context into a string and
