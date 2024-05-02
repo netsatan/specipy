@@ -52,6 +52,7 @@ class StructureDefinition:
 @dataclasses.dataclass
 class ClassStructureDefinition(StructureDefinition):
     inherits_from: str
+    implements: list[str] = dataclasses.field(default_factory=list)
 
 
 @dataclasses.dataclass
