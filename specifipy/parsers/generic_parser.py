@@ -3,11 +3,12 @@ import ast
 from enum import Enum
 
 import javalang.parse
-from javalang.tree import CompilationUnit
+from javalang.tree import CompilationUnit, MethodDeclaration
 
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
     ClassStructureDefinition,
+    Docstring,
     FunctionStructureDefinition,
     NotTypeAnnotatedFieldStructureDefinition,
     StructureEnum,
@@ -37,10 +38,65 @@ class ParserFactory:
 
 
 class JavaParser(GenericParser):
+    def __generate_method_definition(
+        self, method: MethodDeclaration, parent_class: ClassStructureDefinition
+    ) -> FunctionStructureDefinition:
+        name: str = method.name
+        return_type: str = None
+        if "private" in method.modifiers:
+            name = f"-{name}"
+
+        params: list[str] = []
+        if method.parameters:
+            for param in method.parameters:
+                params.append(f"{param.type.name} {param.name}")
+        if method.return_type:
+            return_type = method.return_type.name
+        return FunctionStructureDefinition(
+            StructureEnum.FUNCTION,
+            name,
+            method.position.line,
+            method.position.line,
+            params,
+            parent_class,
+            return_type,
+        )
+
     def parse(self, source_code_file_content: str) -> ParsingResult:
         tree: CompilationUnit = javalang.parse.parse(source_code_file_content)
-        print(tree)
-        return ParsingResult([],[],[])
+        parsing_result: ParsingResult = ParsingResult([], [], [])
+
+        if (
+            tree.types
+        ):  # This list represents classes defined in the Java file. Should be 1 per file.
+            for declaration in tree.types:
+                class_structure = ClassStructureDefinition(
+                    StructureEnum.CLASS,
+                    declaration.name,
+                    declaration.position.line,
+                    declaration.position.line,
+                    declaration.extends.name if declaration.extends else None,
+                )
+                parsing_result.classes.append(class_structure)
+                # Extract documentation if present
+                if declaration.documentation:
+                    docstring = Docstring(declaration.documentation)
+                    if parsing_result.docstrings is not None:
+                        parsing_result.docstrings.append(docstring)
+                    else:
+                        parsing_result.docstrings = [docstring]
+
+                # Now methods
+                if (
+                    declaration.methods
+                ):  # might be None if no method is declared (various DTOs etc.)
+                    methods: list[FunctionStructureDefinition] = []
+                    for method in declaration.methods:
+                        methods.append(
+                            self.__generate_method_definition(method, class_structure)
+                        )
+                    parsing_result.functions = methods
+        return parsing_result
 
 
 class PythonParser(GenericParser):
@@ -105,7 +161,7 @@ class PythonParser(GenericParser):
                     node.lineno,
                     node.end_lineno,
                     params_string,
-                    (parent.name if parent else None),
+                    (parent if parent else None),
                     str(self.get_return_type_annotation(node)),
                 )
                 if function_definition not in parsing_result.functions:
