@@ -3,7 +3,7 @@ import ast
 from enum import Enum
 
 import javalang.parse
-from javalang.tree import CompilationUnit, MethodDeclaration
+from javalang.tree import CompilationUnit, FieldDeclaration, MethodDeclaration
 
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
@@ -49,7 +49,9 @@ class JavaParser(GenericParser):
         params: list[str] = []
         if method.parameters:
             for param in method.parameters:
-                params.append(f"{param.type.name} {param.name}")
+                params.append(
+                    f"{param.type.name} {'<' + param.arguments[0].name + '>' if (hasattr(param, 'arguments') and param.arguments) else ''} {param.name}"
+                )
         if method.return_type:
             return_type = method.return_type.name
         return FunctionStructureDefinition(
@@ -76,6 +78,9 @@ class JavaParser(GenericParser):
                     declaration.position.line,
                     declaration.position.line,
                     declaration.extends.name if declaration.extends else None,
+                    [interface.name for interface in declaration.implements]
+                    if hasattr(declaration, "implements") and declaration.implements
+                    else None,
                 )
                 parsing_result.classes.append(class_structure)
                 # Extract documentation if present
@@ -96,6 +101,26 @@ class JavaParser(GenericParser):
                             self.__generate_method_definition(method, class_structure)
                         )
                     parsing_result.functions = methods
+
+                # And fields
+                if declaration.fields:
+                    field: FieldDeclaration
+                    for field in declaration.fields:
+                        name: str = (
+                            field.declarators[0].name
+                            if not "private" in field.modifiers
+                            else f"-{field.declarators[0].name}"
+                        )
+                        field_type: str = field.type.name
+                        field_structure = TypeAnnotatedFieldStructureDefinition(
+                            StructureEnum.CLASS_FIELD,
+                            name,
+                            field.position.line,
+                            field.position.line,
+                            class_structure,
+                            field_type,
+                        )
+                        parsing_result.class_fields.append(field_structure)
         return parsing_result
 
 
