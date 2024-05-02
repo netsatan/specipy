@@ -16,7 +16,7 @@ class ParamDefinition:
 
 @dataclasses.dataclass
 class Docstring:
-    description: str
+    content: str
 
 
 @dataclasses.dataclass
