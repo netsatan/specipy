@@ -1,6 +1,7 @@
-from py_d2 import D2Connection, D2Diagram, D2Shape
+from py_d2 import D2Connection, D2Diagram, D2Shape, Direction
 from py_d2.shape import Shape
 
+from specifipy.diagram_engines.hashable_connection import D2HashableConnection
 from specifipy.parsers.generic_parser import FileType, ParserFactory, PythonParser
 from specifipy.parsers.results import ParsingResult
 from specifipy.parsers.structure.code_structure_definitions import (
@@ -102,6 +103,15 @@ class DiagramGenerator:
                         shape_1=class_element.name, shape_2=class_element.inherits_from
                     )
                 )
+            if class_element.implements:
+                for interface in class_element.implements:
+                    link_to_generate.append(
+                        D2HashableConnection(
+                            class_element.name,
+                            interface,
+                            "{ style: { stroke-dash: 3 } } ",
+                        )
+                    )
         self.add_missing_elements_from_links_as_classes(
             elements_to_generate, link_to_generate
         )
