@@ -14,26 +14,27 @@ class DirectoryScanner:
     full_file_paths: list[str] = []
     file_type: FileType = FileType.PYTHON
 
-    file_extension_mapping = {
-        "python": "py", "java": "java"
-    }
+    file_extension_mapping: dict[str, str] = {"python": "py", "java": "java"}
 
     def __matches_file_classification(self, full_file_path) -> bool:
         file_name = full_file_path.split("/")[-1]
-        expected_file_type_expression_length = len(self.file_extension_mapping[self.file_type.value]) + 1
+        expected_file_type_expression_length = (
+            len(self.file_extension_mapping[self.file_type.value]) + 1
+        )
         return (
-                os.path.isfile(full_file_path)
-                and file_name[0] != "."
-                and file_name[-expected_file_type_expression_length:] == f".{self.file_extension_mapping[self.file_type.value]}"
+            os.path.isfile(full_file_path)
+            and file_name[0] != "."
+            and file_name[-expected_file_type_expression_length:]
+            == f".{self.file_extension_mapping[self.file_type.value]}"
         )
 
     def __matches_directory_classification(self, full_dir_path) -> bool:
         dir_name: str = full_dir_path.split("/")[-1]
         return (
-                os.path.isdir(full_dir_path)
-                and dir_name[0] != "."
-                and not "venv" in dir_name
-                and not "virtualenv" in dir_name
+            os.path.isdir(full_dir_path)
+            and dir_name[0] != "."
+            and not "venv" in dir_name
+            and not "virtualenv" in dir_name
         )
 
     def __init__(self, base_path: str, file_type: FileType = FileType.PYTHON):
@@ -63,14 +64,11 @@ class DirectoryScanner:
 
         self.do_recursive_directory_scanning()
 
-    def show_vars(self):
-        print(self.full_dir_paths, self.full_file_paths)
-
     def make_diagrams(
-            self,
-            collect_files=True,
-            file_name_containers: bool = False,
-            base_path: str | None = None,
+        self,
+        collect_files=True,
+        file_name_containers: bool = False,
+        base_path: str | None = None,
     ):
         diagram_generator = DiagramGenerator(self.file_type)
         diagrams: list[D2Diagram] = []
@@ -110,7 +108,7 @@ class DirectoryScanner:
                             os.path.join(directory_path, file_system_element)
                         )
                     if os.path.isfile(
-                            full_file_path
+                        full_file_path
                     ) and self.__matches_file_classification(full_file_path):
                         self.full_file_paths.append(
                             os.path.join(directory_path, file_system_element)
