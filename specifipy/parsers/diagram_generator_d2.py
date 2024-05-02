@@ -73,11 +73,12 @@ class DiagramGenerator:
         link_to_generate: list[D2Connection] = []
 
         class_element: ClassStructureDefinition
+
         for class_element in parsing_result.classes:
             class_functions = [
                 self.__generate_class_function_definition_d2(x)
                 for x in parsing_result.functions
-                if x.parent_class == class_element.name
+                if x.parent_class == class_element
             ]
             class_fields = [
                 self.__generate_field_definition_d2(x)
