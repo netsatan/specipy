@@ -1,12 +1,12 @@
 # Specifipy
-<img height="150" src="./OIG3.jpeg" width="150"/>
-
-Python package for auto-generating code diagrams
+### Python package for auto-generating code diagrams
+<img height="150" src="./docs/OIG3.jpeg" width="150"/>
 
 ## What is that? 
-Specifipy helps you visually understand your Python code. It generates UML code diagrams 
+Specifipy helps you *visually* understand code. It generates **UML code diagrams** 
 for your object-oriented programs showing you the inheritance, interfaces, fields, methods and
-functions.
+functions. Assuming you need to provide a very detailed documentation of your OO software, see if the
+things make sense or not, you're going through some kind of audit - it might prove useful.
 
 ## How to use that? 
 ### Scanning directory and generating diagrams for all files
@@ -26,7 +26,8 @@ In such case, you'll need to provide additional arguments, like this:
 ```python
 from specifipy.file_scanners.directory_scanner import DirectoryScanner
 from specifipy.parsers.generic_parser import FileType
-d = DirectoryScanner("/home/netsatan/tmp/utils4j/src/main", FileType.JAVA)
+d = DirectoryScanner("/path/to/your/src/directory", FileType.JAVA)
+d.make_diagrams()
 ```
 
 ### In-place diagram generation
@@ -43,10 +44,14 @@ diagram_generator.generate_diagram(
 )
 ```
 
-Of course, you can provide as `file_contents_str` any valid Python code however you'd like, not only from a file.
+Of course, you can provide as `file_contents_str` any valid code however you'd like, not only from a file.
+
+### Available parsers
+Currently, there are two parsers available - one for Java and one for Python:
+![](./docs/parsers.svg)
 
 ### Diagram example
-The complete diagram looks something like this
+The complete diagram for the below code:
 ```python
 class BaseClassForTest:
     pass
@@ -92,9 +97,10 @@ class ComplexNumber(SomeTest):
         return ComplexNumber(re, im)
 
 ```
+...looks something like this:
 ![Example 1](./tests/examples/diagrams/complex_number_old_python.py.png)
 
-or like this
+or for the code:
 ```python
 class MathOperation:
     pass
@@ -117,11 +123,35 @@ class Addition(MathOperation):
         return running_sum
 
 ```
+it'll be something closer to this:
 ![Example 2](./tests/examples/diagrams/simple_addition_modern_python.py.png)
 
 
 And here's this exact codebase (including examples above):
 ![Codebase example](./tests/examples/diagrams/d2.svg)
+
+---
+So, in reality you get a d2 file (or a set of d2 files, depending on the `collect_files` parameter). 
+Your actual output follows the d2 specification:
+```d2
+direction: up
+BaseClassForTest: {
+  shape: class
+}
+SomeTest: {
+  shape: class
+}
+ComplexNumber: {
+  __init__(self, real, imag): 'None'
+  add(self, num): 'None'
+  shape: class
+}
+SomeTest -> BaseClassForTest
+ComplexNumber -> SomeTest
+```
+
+If you're generating Java code, the dotted line is used to indicate implemented interface instead of class inheritance,
+and private fields and methods are marked accordingly.
 
 ---
 If you like this project, and it helped you in any way, I'll be thrilled to know that! I like to write software that's 
