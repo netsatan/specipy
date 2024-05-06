@@ -37,6 +37,8 @@ class StructureDefinition:
         "width",
         "height",
         "link",
+        "top",
+        "steps"
     ]
 
     # This hack is to avoid failure on diagram generation when a D2 keyword is encountered

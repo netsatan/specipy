@@ -70,6 +70,8 @@ class DiagramGenerator:
         file_name_container=False,
     ) -> D2Diagram | None:
         parsing_result: ParsingResult = self.parser.parse(source_file_content)
+        if not (parsing_result.class_fields or parsing_result.classes or parsing_result.functions or parsing_result.docstrings):
+            print(f"File {source_file_name} returned empty result as it probably contains syntax errors")
         elements_to_generate: list[D2Shape] = []
         link_to_generate: list[D2Connection] = []
 
