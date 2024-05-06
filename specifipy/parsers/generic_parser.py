@@ -3,6 +3,7 @@ import ast
 from enum import Enum
 
 import javalang.parse
+from javalang.parser import JavaSyntaxError
 from javalang.tree import CompilationUnit, FieldDeclaration, MethodDeclaration
 
 from specifipy.parsers.results import ParsingResult
@@ -39,7 +40,7 @@ class ParserFactory:
 
 class JavaParser(GenericParser):
     def __generate_method_definition(
-        self, method: MethodDeclaration, parent_class: ClassStructureDefinition
+            self, method: MethodDeclaration, parent_class: ClassStructureDefinition
     ) -> FunctionStructureDefinition:
         name: str = method.name
         return_type: str = None
@@ -65,11 +66,16 @@ class JavaParser(GenericParser):
         )
 
     def parse(self, source_code_file_content: str) -> ParsingResult:
-        tree: CompilationUnit = javalang.parse.parse(source_code_file_content)
-        parsing_result: ParsingResult = ParsingResult([], [], [])
+        try:
+            parsing_result: ParsingResult = ParsingResult([], [], [])
+            tree: CompilationUnit = javalang.parse.parse(source_code_file_content)
+
+        except JavaSyntaxError as java_syntax_error:
+            print(f"There was a problem with a file: {java_syntax_error.description}")
+            return parsing_result
 
         if (
-            tree.types
+                tree.types
         ):  # This list represents classes defined in the Java file. Should be 1 per file.
             for declaration in tree.types:
                 class_structure = ClassStructureDefinition(
@@ -77,7 +83,8 @@ class JavaParser(GenericParser):
                     declaration.name,
                     declaration.position.line,
                     declaration.position.line,
-                    declaration.extends.name if declaration.extends else None,
+                    declaration.extends.name if hasattr(declaration, "extends") and declaration.extends and hasattr(
+                        declaration.extends, "name") else None,
                     [interface.name for interface in declaration.implements]
                     if hasattr(declaration, "implements") and declaration.implements
                     else None,
@@ -93,7 +100,7 @@ class JavaParser(GenericParser):
 
                 # Now methods
                 if (
-                    declaration.methods
+                        declaration.methods
                 ):  # might be None if no method is declared (various DTOs etc.)
                     methods: list[FunctionStructureDefinition] = []
                     for method in declaration.methods:
@@ -137,8 +144,8 @@ class PythonParser(GenericParser):
         for node in ast.walk(function_node):
             if isinstance(node, ast.Return):
                 if (
-                    isinstance(node.value, ast.NameConstant)
-                    and node.value.value is None
+                        isinstance(node.value, ast.NameConstant)
+                        and node.value.value is None
                 ):
                     continue
                 if isinstance(node.value, ast.AnnAssign):
@@ -146,7 +153,7 @@ class PythonParser(GenericParser):
         return None
 
     def __classify_node(
-        self, node: ast.AST, parsing_result: ParsingResult, parent=None
+            self, node: ast.AST, parsing_result: ParsingResult, parent=None
     ) -> None:
         match type(node):
             case ast.ClassDef:
